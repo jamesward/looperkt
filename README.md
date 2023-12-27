@@ -7,8 +7,6 @@ Write some pixels to a browser Canvas via Kotlin/Wasm.
 
 Example: Draw a blue pixel wherever the mouse pointer is:
 ```kotlin
-import kotlin.random.Random
-import kotlin.random.nextUInt
 import com.jamesward.looperkt.*
 
 fun main() {
