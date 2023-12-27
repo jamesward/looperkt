@@ -41,6 +41,7 @@ tasks.withType<Sign> {
 }
 
 signing {
+    sign(publishing.publications)
     useInMemoryPgpKeys(System.getenv("GPG_PRIVATE_KEY"), System.getenv("GPG_PASSPHRASE"))
 }
 
