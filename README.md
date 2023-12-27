@@ -5,6 +5,8 @@ LooperKt
 
 Write some pixels to a browser Canvas via Kotlin/Wasm.
 
+[Check out the demos](https://jamesward.github.io/looperkt-demos/)
+
 Example: Draw a blue pixel wherever the mouse pointer is:
 ```kotlin
 import com.jamesward.looperkt.*
