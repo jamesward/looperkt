@@ -1,0 +1,42 @@
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  check-env:
+    outputs:
+      credentials-defined: ${{ steps.get-credentials.outputs.defined }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: get-credentials
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        if: ${{ env.GPG_PRIVATE_KEY != '' && env.GPG_PASSPHRASE != '' && env.SONATYPE_USERNAME != '' && env.SONATYPE_PASSWORD != '' }}
+        run: |
+          echo "defined=true" >> $GITHUB_OUTPUT
+
+  publish:
+    needs: [check-env]
+    if: needs.check-env.outputs.credentials-defined == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Publish
+        run: |
+          ./gradlew publishToSonatype
